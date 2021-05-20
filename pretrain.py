@@ -197,8 +197,7 @@ def evaluate(args, model, val_dataloader, criterion, device):
             #task_A_pred, task_B_pred = model(train_inputs)
             task_A_pred = model(train_inputs)
 
-            criterion[0] = criterion[0].to(device)
-            criterion[1] = criterion[1].to(device)
+            criterion = criterion.to(device)
 
             loss_A12 = criterion[0](task_A_pred[0], label_A)
             loss_A23 = criterion[0](task_A_pred[1], label_A)
@@ -271,14 +270,10 @@ def train(args, epoch, model, train_dataloader, val_dataloader, optimizer, crite
         #task_A_pred, task_B_pred = model(train_inputs)
         task_A_pred = model(train_inputs)
 
-        criterion[0] = criterion[0].to(device)
-        criterion[1] = criterion[1].to(device)
+        criterion=criterion.to(device)
 
 
-        loss_A12 = criterion[0](task_A_pred[0], label_A)
-        loss_A23 = criterion[0](task_A_pred[1], label_A)
-        loss_A13 = criterion[0](task_A_pred[2], label_A)
-        loss_A = (loss_A12 + loss_A23 + loss_A13)
+        loss_A = criterion(task_A_pred[0], label_A)
         #loss_B = criterion[1](task_B_pred, label_B)
         loss_B = 0.0
         loss = loss_A + loss_B
@@ -403,10 +398,10 @@ def main():
 
 
     train_imgs_dir = os.path.join(args.dataset_dir, "train")
-    train_labels = pd.read_csv(os.path.join(args.dataset_dir, "label_eliminate_2/train_labels.csv"))
+    train_labels = pd.read_csv(os.path.join(args.dataset_dir, "label/train_labels.csv"))
 
     val_imgs_dir = os.path.join(args.dataset_dir, "test")
-    val_labels = pd.read_csv(os.path.join(args.dataset_dir, "label_eliminate_2/test_labels.csv"))
+    val_labels = pd.read_csv(os.path.join(args.dataset_dir, "label/test_labels.csv"))
 
     #test_imgs_dir = os.path.join(args.dataset_dir, "test")
     #test_labels = pd.read_csv(os.path.join(args.dataset_dir, "label/test_label.csv"))
@@ -504,9 +499,9 @@ def main():
 
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
         Loss_B = Multi_cross_entropy()
-        criterion = [nn.BCELoss(), Loss_B]
+        criterion = nn.BCELoss()
         model.to(device)
-        #criterion = criterion.to(device)
+        criterion = criterion.to(device)
         model.train()
         optimizer.zero_grad()
 

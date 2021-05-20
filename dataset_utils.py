@@ -63,6 +63,13 @@ class PretrainImageDataset(Dataset):
         #image_3 = read_image(img_3_path)
 
         label_A = self.img_labels.iloc[idx, 3]
+        #does this cause errors
+        if (label_A == 0):
+            label_A = [1, 0, 0]
+        elif (label_A == 1):
+            label_A = [0, 1, 0]
+        else:
+            label_A = [0, 0, 1]
         label_B = self.img_labels.iloc[idx, 4]
         label_B = json.loads(label_B)
 
@@ -74,11 +81,7 @@ class PretrainImageDataset(Dataset):
         #if self.target_transform:
         #    label = self.target_transform(label)
 
-        if(label_A == 2):
-            label_A = 0
-        elif(label_A == 0):
-            label_A = 1
 
-        sample = {"image_1": image_1, "image_2": image_2, "image_3": image_3, "label_A": label_A, "label_B": torch.FloatTensor(label_B)}
+        sample = {"image_1": image_1, "image_2": image_2, "image_3": image_3, "label_A": torch.FloatTensor(label_A), "label_B": torch.FloatTensor(label_B)}
 
         return sample
