@@ -63,13 +63,6 @@ class PretrainImageDataset(Dataset):
         #image_3 = read_image(img_3_path)
 
         label_A = self.img_labels.iloc[idx, 3]
-        #does this cause errors
-        if (label_A == 0):
-            label_A = [1, 0, 0]
-        elif (label_A == 1):
-            label_A = [0, 1, 0]
-        else:
-            label_A = [0, 0, 1]
         label_B = self.img_labels.iloc[idx, 4]
         label_B = json.loads(label_B)
 
