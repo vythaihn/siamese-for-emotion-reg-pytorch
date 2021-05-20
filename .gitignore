@@ -1,0 +1,5 @@
+dataset/
+runs/
+runs_pretrained/
+.idea/
+__pycache__/
