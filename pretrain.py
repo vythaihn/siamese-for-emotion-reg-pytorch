@@ -189,7 +189,7 @@ def evaluate(args, model, val_dataloader, criterion, device):
 
             train_inputs = (train_inputs_1, train_inputs_2, train_inputs_3)
 
-            label_A = label_A.to(device).unsqueeze(1).float()
+            label_A = label_A.to(device)
             label_B = label_B.to(device)
 
 
@@ -199,10 +199,10 @@ def evaluate(args, model, val_dataloader, criterion, device):
 
             criterion = criterion.to(device)
 
-            loss_A12 = criterion[0](task_A_pred[0], label_A)
-            loss_A23 = criterion[0](task_A_pred[1], label_A)
-            loss_A13 = criterion[0](task_A_pred[2], label_A)
-            loss_A = (loss_A12 + loss_A23 + loss_A13)
+            loss_A1 = criterion(task_A_pred[0], label_A)
+            loss_A2 = criterion(task_A_pred[1], label_A)
+            loss_A3 = criterion(task_A_pred[2], label_A)
+            loss_A = (loss_A1 + loss_A2 + loss_A3)
             # loss_B = criterion[1](task_B_pred, label_B)
             loss_B = 0.0
             loss = loss_A + loss_B
@@ -262,7 +262,7 @@ def train(args, epoch, model, train_dataloader, val_dataloader, optimizer, crite
 
         train_inputs = (train_inputs_1, train_inputs_2, train_inputs_3)
 
-        label_A = label_A.to(device).unsqueeze(1).float()
+        label_A = label_A.to(device)
         label_B = label_B.to(device)
 
         optimizer.zero_grad()
@@ -273,7 +273,10 @@ def train(args, epoch, model, train_dataloader, val_dataloader, optimizer, crite
         criterion=criterion.to(device)
 
 
-        loss_A = criterion(task_A_pred[0], label_A)
+        loss_A1 = criterion(task_A_pred[0], label_A)
+        loss_A2 = criterion(task_A_pred[1], label_A)
+        loss_A3 = criterion(task_A_pred[2], label_A)
+        loss_A = (loss_A1 + loss_A2 + loss_A3)
         #loss_B = criterion[1](task_B_pred, label_B)
         loss_B = 0.0
         loss = loss_A + loss_B
@@ -499,7 +502,7 @@ def main():
 
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
         Loss_B = Multi_cross_entropy()
-        criterion = nn.BCELoss()
+        criterion = nn.CrossEntropyLoss()
         model.to(device)
         criterion = criterion.to(device)
         model.train()

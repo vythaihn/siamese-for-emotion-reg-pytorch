@@ -75,6 +75,6 @@ class PretrainImageDataset(Dataset):
         #    label = self.target_transform(label)
 
 
-        sample = {"image_1": image_1, "image_2": image_2, "image_3": image_3, "label_A": torch.FloatTensor(label_A), "label_B": torch.FloatTensor(label_B)}
+        sample = {"image_1": image_1, "image_2": image_2, "image_3": image_3, "label_A": label_A, "label_B": torch.FloatTensor(label_B)}
 
         return sample

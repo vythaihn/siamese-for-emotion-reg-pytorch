@@ -33,7 +33,7 @@ class Siamese(nn.Module):
         )
 
         self.task_A_concat = nn.Sequential(
-            nn.Linear(4096, 4096),
+            nn.Linear(12288, 4096),
             nn.BatchNorm1d(4096),
             nn.Dropout(0.5),
             nn.ReLU(inplace=True),
@@ -48,8 +48,7 @@ class Siamese(nn.Module):
             nn.Dropout(0.5),
             nn.ReLU(inplace=True),
 
-            nn.Linear(4096, 3),
-            nn.Softmax()
+            nn.Linear(4096, 3)
         )
 
     def forward_one(self, x):
@@ -74,9 +73,9 @@ class Siamese(nn.Module):
         concat2 = torch.cat((torch.tensor(out2), torch.tensor(out3), torch.tensor(out1)), 1)
         concat3 = torch.cat((torch.tensor(out3), torch.tensor(out1), torch.tensor(out2)), 1)
 
-        x1 = self.forward_task_A_concat(concat1)
-        x2 = self.forward_task_A_concat(concat2)
-        x3 = self.forward_task_A_concat(concat3)
+        x1 = self.taskA_one(concat1)
+        x2 = self.taskA_one(concat2)
+        x3 = self.taskA_one(concat3)
 
         task_A_out = (x1,x2,x3)
         return task_A_out
